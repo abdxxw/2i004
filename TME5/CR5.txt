@@ -1,0 +1,242 @@
+﻿=======================================  TME5  =============================================
+############################## BOUSBA Abdellah 3804891 #####################################
+============================================================================================
+
+ ==============
+|| Exercice1: ||
+ ==============
+
+1.
+on a une memoire 16 mots de 8 bits :
+16 mots = 2^4 ====> BUS D'ADRESS sur 4 bits 
+la taille d'un mots = 8bits ===> BUS DATA sur 8bits 
+Commandes : lire/ecrire alors 1bits : 1 ecrire / 0 lire
+remarque : 
+pour le bus de commande on met un pin on le relire avec str ( store ) et on le lire avec une porte NON puis ld (load) .
+
+2.
+-les mots apparaissant à l’intérieur de la mémoire represantent les données qu'on peut lire ou ecrire et ils sont codée 
+en base 16 (hexa)
+-connaitre le contenu du mot d’adresse (0000)b : ADR = 0000, CMD = 0 , Chip Select = 1 et un cycle d'horloge
+on trouvera le resultat dans la sortire sur 8bits DATA_out ( meme chose pour (0001)b on change ADR a 0001 )
+-pour stocker la valeur (10)h dans le mot d’adresse (0001)b :
+ADR = 0001 , DATA_in = 00010000 ,CMD = 1, Chip Select = 1 , + cycle d'horloge
+-pour stocker la valeur 3 dans le mot 5 :
+ADR = 0101 , DATA_in = 00000011 ,CMD = 1, Chip Select = 1 , + cycle d'horloge
+-pour placer sur le bus de données le mot stocké en mémoire à l’adresse 5 :
+ADR = 0101 ,CMD = 0, Chip Select = 1 , + cycle d'horloge
+
+3.
+8 mots = 2^3 ====> BUS D'ADRESS sur 3 bits 
+la taille d'un mots = 4octets(32bits) ===> BUS DATA sur 32bits 
+
+============================================================================================
+
+
+
+ ==============
+
+|| Exercice2: ||
+
+ ==============
+
+
+1. l'execution sera sur un seul tranfert : r[2] <- r[0] + 2
+
+
+
+2. pour voir le contenu de AD on le met sur X ou Y par ADOutputXEnable ou ADOutputYEnable = 1
+ 
+  pour voir le contenu de DT on le met sur X par  DTOutputXEnable = 1
+   
+pour voir le contenu des registre on selection le registe en utilsant NumRegToRead (R1=01,R2=10,R3=11)
+et on le met
+ sur x par RegOutputXEnable = 1
+
+
+
+3.	CST = 0011
+
+	CteOutputYEnable = 1
+	
+	NumRegToRead = 00
+
+	RegOutputXEnble = 1
+
+	NumRegToWrite =11
+
+	RegWriteEnable = 1
+
+	Clock=1, Clock =0
+
+
+
+4.	CST = 0000
+
+	CteOutputYEnable = 1
+
+	NumRegToRead = 10
+
+	RegOutputXEnable =1
+
+	ADWriteEnable = 1
+
+	Clock=1, Clock =0
+
+
+
+5.	ADOutputYEnable = 1
+
+	NumRegToRead = 11
+
+	RegOutputXEnable = 1
+
+	NumRegToWrite = 01
+
+	RegWriteEnable = 1
+
+	Clock=1, Clock =0
+
+
+
+6.	ADoutputEnable = 1
+
+	ADOutputAdressEnable = 1
+
+	NumRegToRead =10
+
+	RegOutputXEnable = 1
+
+	StoreCommand = 1
+
+	Clock=1, Clock =0
+
+
+
+7.	ADoutputAdressEnable = 1
+
+	LoadCommand = 1
+
+	DTWriteEnable = 1
+
+	Clock=1, Clock =0
+
+
+
+8.	pour verifier qu'on a fait une ecriture a reussi on peut lire de la memoire avec la meme adress et on 
+verifie la valeur renvoyé
+	
+
+
+
+
+============================================================================================
+
+ 
+
+==============
+
+|| Exercice3: ||
+ 
+==============
+
+
+1.
+	R0 <- R0 +1 : on ne peut pas R0 vaut toujour 0
+
+	R1 <-R0 : realisable ne un seul transfert
+
+	AD <- R1+R2 : non realisable en un seul transfert (2 transfert)
+
+	DT <- R1 : non realisable car DT n'as pas comme entrée le Resultat de L'ALU
+
+
+
+2.
+	R0 <- R0 +1 : (non realisable)
+
+	R1 <-R0 : Additionne la valeur 0 (CST) avec la valeur de R0 et met le resultat de l'ALU dans R1
+
+	AD <- R1+R2 :en 2 transfert : le 1ere est une affectation de R1 dans AD (AD = R1+0)apres le 2eme transfert 
+une addition entre AD et R2 (AD sur Y et R2 sur X) et met le resultat dans AD.
+
+	DT <- R1 : (non realisable)
+
+
+
+
+
+
+============================================================================================
+
+ 
+
+==============
+
+|| Exercice4: ||
+
+ ==============
+
+
+
+—addi $3, $0, 5 : 
+	r[3] <- r[0]+5
+
+—  addi $2, $0, 4 :
+	r[2] <- r[0]+5
+
+—  sw $3, 4($2) :
+	AD <- r[2]+4
+
+			m[AD] <- r[3]+0
+
+—  lw $1, 8($2) :
+	AD <- r[2]+8
+
+			DT <- m[AD]
+	
+			r[1]<-DT+0
+
+
+
+============================================================================================
+
+
+ ==============
+
+|| Exercice5: ||
+
+ ==============
+
+
+dans cette séquence d'instruction on realise les transfert suivantes:
+
+
+
+	r[3] <- r[0]+5
+
+	r[2] <- r[0]+4
+
+	AD <- r[3] + 0
+
+	r[1]<- AD+r[2]
+
+	AD <- r[2] + 4
+
+	m[AD] <- r[1] +0
+
+	AD <- r[2] + 0
+
+	r[2] <- AD+r[2]
+
+	AD <- r[2]+0
+
+	DT <- m[AD]
+
+	r[3] <-DT+0
+
+
+
+
+
+R3 =9, DT=9 AD=8 R2=8 R1 =9 R3=5

@@ -1,0 +1,81 @@
+=======================================  TME1  =============================================
+############################## BOUSBA Abdellah 3804891 #####################################
+============================================================================================
+
+ ==============
+|| Exercice1: ||
+ ==============
+1.pour construire le circuit a et NON b on ajoute 3 Pins sans oublier les nommer a,b,s (Label) , NOT gate et AND gate
+on change number of input du porte ET a 2 entrées et on relie touts.
+on choisit le mode simulation pour confirmer que le circuit fonctionne bien et on trouve la table suivante :
+
+a	b	s
+0	0	0
+0	1	0
+1	0	1
+1	1	0
+
+
+
+2.D'après le TD f = a XOR b = ( NON a et b) ou (a et NON b)
+alors pour realiser ce circuit on attache a et b a deux porte NON, et ces deux dernieres a deux portes ET
+en plus de ca on prends a et b et on branche chacun a une porte ET ( pour obtenir ( NON a et b) , (a et NON b) )
+enfin on branche les deux portes ET a une porte OU apres s. 
+pour confirmer le fonctionement du circuit on passe au mode simulation :
+
+a	b	s
+0	0	0
+0	1	1
+1	0	1
+1	1	0
+
+
+============================================================================================
+
+ ==============
+|| Exercice2: ||
+ ==============
+
+1.D'après le TD la fonction du multiplexeur est f = (NON v ET e0) ou (v ET e1)
+
+
+2.on construit le circuit apres des portes NON , ET , OU sans oublier de changer le nombre des entrées a 2
+pour la reutilisation du circuit dans les quetsions suivant on change le Facing de v a South 
+on verifie notre circuit par simulation et on remarque que si v = 0 s depand de e0 , sinon de e1.
+
+
+
+
+============================================================================================
+
+ ==============
+|| Exercice3: ||
+ ==============
+
+1. pour realiser un multiplexeur 2sur4 on doit utiliser 4 mux a 2 entrée, 4Pins pour A et 4 pour B, 
+on attache a3 b3, a2 b2, a1 b1, a0 b0 dans cette ordre au 4 MUX2 et on branche le selecteur i 
+a ces 4 derniers (à l'entrée v)
+chaque MUX2 sera branché a une sortie s3 s2 s1 s0.
+en passe au mode simulation et on remaque que la valeur de chaque sortie depands du A ou B equivalant 
+depandant su selecteur par exemple 
+si i = 0 , a3 = 1 alors s3 = 1
+   i = 1 , b1 = 1 alors s1 = 1
+
+============================================================================================
+
+ ==============
+|| Exercice4: ||
+ ==============
+
+1. on a 4 entrées donc 4 = 2^n ====> n = 2 alors le selecteur doit etre sur 2 bits 
+
+2. l'expression du mux 4 vers 1 est f= (NON i1.NON i0.e0)+(NON i1. i0.e1)+(i1.NON i0.e2)+(i1.i0.e3)
+
+et la formule avec celle du MUX2 f= NON i1.(NON i0.e0 + i0.e1)+ i1(NON i0.e2+i0.e3) avec . = ET / + = OU
+
+
+3. pour le mux de 8 entrées on utilise le meme circuit du mux4vers1 deux fois en ajoutant un bit selecteur 
+et un MUX2 pour relier les 2 circuit, la meme chose pour 16 entrées on utilise le circuit de 8 deux fois
+et on ajoute un MUX2 pour les relier donc en conclusion : pour construit un circuit de 2^n entrées on utilise
+le ciruit de 2^n-1 deux fois en ajoutant un MUX2 pour les relier et un bit selecteur de plus (donc (2^n-1)+1 MUX2)
+  

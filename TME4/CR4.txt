@@ -1,0 +1,157 @@
+=======================================  TME3  =============================================
+############################## BOUSBA Abdellah 3804891 #####################################
+============================================================================================
+
+ ==============
+|| Exercice1: ||
+ ==============
+
+1.pour maintenir la valeur 1 dans un registe : d'abord on met 1 dans le registre( Din = 1, WE=1, a un front mentant)
+apres on met WE=0 pour ne pas changer la valeur dans le registre (Dout).
+
+Clock(280,270)	WE	Din	Register(300,170)	Dout
+0		0	0	0			0
+0		0	1	0			0
+0		1	1	0			0
+1		1	1	1			1
+1		0	1	1			1
+0		0	1	1			1
+1		0	1	1			1
+0		0	1	1			1
+0		0	0	1			1
+1		0	0	1			1
+0		0	0	1			1
+1		0	0	1			1
+0		0	0	1			1
+
+2. on met la Din = 0100 ,WE=1 , CK=1 ====> on charge le registre apres on met WE=0 pour deactiver l'ecriture
+pendant 2 cycle.
+
+on met la Din = 1111 ,WE=1 , CK=1 ====> on charge le registre apres on met WE=0 pour deactiver l'ecriture
+pendant 3 cycle.
+
+CK	WE	Din	Dout
+0	0	xxxx	0000
+0	0	0xxx	0000
+0	0	00xx	0000
+0	0	01xx	0000
+0	0	010x	0000
+0	0	0100	0000
+0	1	0100	0000
+1	1	0100	0100
+0	1	0100	0100
+0	0	0100	0100
+0	0	0110	0100
+0	0	1110	0100
+1	0	1110	0100
+1	0	1x10	0100
+1	0	1010	0100
+0	0	1010	0100
+1	0	1010	0100
+0	0	1010	0100
+0	0	1011	0100
+0	0	1111	0100
+0	1	1111	0100
+1	1	1111	1111
+0	1	1111	1111
+0	0	1111	1111
+0	0	111x	1111
+0	0	1110	1111
+1	0	1110	1111
+0	0	1110	1111
+0	0	1x10	1111
+0	0	1010	1111
+0	0	x010	1111
+0	0	0010	1111
+1	0	0010	1111
+0	0	0010	1111
+0	0	00x0	1111
+0	0	0000	1111
+1	0	0000	1111
+0	0	0000	1111
+
+============================================================================================
+
+ ==============
+|| Exercice2: ||
+ ==============
+
+1.Addition 3 entier :
+
+pour faire l'addition -3+5+6 on les represente les nombre negatif en complement a deux
+ie 1101+0101+0110 donc on mets les valeur respectivement a Din_A , Din_B , Din_C et on met ext_A,ext_B,ext_C 
+a 1 pour recevoir data du Din et non pas du l'ALU, on met WE_A,WE_B,WE_C a 1 ensuite un cycle d'horloge pour
+charger les valeur dans les registre RA,RB,RC ( ne pas oublier de mettre tout les WE a 0).Ensuite, on met OPX a 00 pour
+choisir RA, OPY a 01 pour choisir RB l'Add/Sub a 0  et on met WE_D a 1 et ext_D a 0 pour sauvgarder le resultat 
+d'addition RA+RB dans RD, un cycle d'horloge, remettre WE_D a 0. Enfin on met OPX a 10, OPY a 11 et Add/Sub a 0 pour 
+selectionner l addition entre RC et RD, WE_D a 1, pour et ext_D a 0 un cycle d'horloge pour storer le resultat finale
+dans RD.
+
+
+2.MAX entre 3 entier n,m,p:
+
+pour realiser ce calcule il faut voir le max entre n et m apres comparer ce dernier avec p :
+
+-placer n,m,p respectivement dans RA,RB,RC: 
+	on place les valeur de n,m,p dans Din_A,Din_B,Din_C apres on met ext_A,ext_A et ext_C à 1 et WE_A,WE_B,WE_C à 1
+aussi pour activer l'ecriture dans les registre depuis les Din ensuite un cycle d'horloge et on remet WE_A,WE_B,WE_C à 0
+-Calculer RA-RB :
+	on met OPX = 00, OPY = 01, Add/Sub = 1 et sans sauvgarder le resultat de l'operation on voix juste le Signe Flag
+si SF = 0 n>m alors on place RA dans RD 
+si SF = 1 m>n alors on place RB dans RD
+pour placer RA ou RB dans RD on initialite RD a 0 (ext_D = 1 , Din_D = 0000, WE_D = 1 + un cycle d'horloge et WE_D = 0 )
+ensuite on additione RD avec le max et on place le resultat dans RD ( OPX =00 si n max, OPX=01 si m max, OPY =11 , 
+ext_D = 0 , WE_D = 1) et un cycle d'horloge + WE_D = 0.en ce moment RD = max(n,m) alors on le compare avec p
+-Calculer RC-RD :
+on met OPX = 10, OPY = 11, Add/Sub = 1 et sans sauvgarder le resultat de l'operation on voix juste le Signe Flag
+si SF = 0 p>max(n,m) alors on place RC dans RD (de meme façon que RA/RB)
+si SF = 1 max(n,m)>p alors la valeur dans RD = max(n,m,p)
+-Enfin on a le max des 3 entier dans le registre RD
+
+
+3. Simulation de pgcd(6,4)
+
+-D'abord ext_A,ext_B,ext_C,ext_D = 1 , WE_A,WE_B,WE_C,WE_D = 1 , Din_A,Din_B,Din_C,Din_D = 0000 + un cycle d'horloge et
+remettre les WE a 0 )pour initialiser tout les registre a 1 
+-Din_A = 0110 , Din_B = 0100 ,ext_A,ext_B = 1 , WE_A,WE_B= 1 + cycle et remettre les WE a 0 ( RA=6 , RB =4)
+-ext_C = 0, WE_C = 1, OPX = 00 , OPY = 01, Add/Sub = 1 et un cycle d'horloge + remettre WE a 0 ( RC = RA - RB = 6-4 = 2)
+-on trouve que ZF = 0 et SF = 0 alors on met le Resultat dans RA :
+	//ext_A = 1, WE_A = 1,Din_A = 0000 , cycle d'horloge et remettre WE a 0 ( RA = 0)
+	//ext_A = 0, WE_A = 1, OPX = 00, OPY = 10 , Add/Sub = 0 , cycle d'horloge et remettre WE a 0 ( RA = RA+ RC = 2)
+-ext_C = 0, WE_C = 1, OPX = 00 , OPY = 01, Add/Sub = 1 et un cycle d'horloge + remettre WE a 0 ( RC = RA - RB =2-4=-2)
+-on trouve que ZF =0 et SF = 1 alors on place 4-2 dans RB :
+	//ext_B = 0,WE_B = 1, OPX = 01, OPY = 00, Add/Sub = 1, cycle d'horloge et remettre WE a 0 ( RB = RB- RA = 2)
+-ext_C = 0, WE_C = 1, OPX = 00 , OPY = 01, Add/Sub = 1 et un cycle d'horloge + remettre WE a 0 ( RC = RA - RB =2-2=0)
+-on trouve que ZF=0 alors RA = RB = pgcd(6,4) = 2
+
+
+============================================================================================
+
+ ==============
+|| Exercice3: ||
+ ==============
+
+1.
+on a une memoire 16 mots de 8 bits :
+16 mots = 2^4 ====> BUS D'ADRESS sur 4 bits 
+la taille d'un mots = 8bits ===> BUS DATA sur 8bits 
+Commandes : lire/ecrire alors 1bits : 1 ecrire / 0 lire
+remarque : 
+pour le bus de commande on met un pin on le relire avec str ( store ) et on le lire avec une porte NON puis ld (load) .
+
+2.
+-les mots apparaissant à l’intérieur de la mémoire represantent les données qu'on peut lire ou ecrire et ils sont codée 
+en base 16 (hexa)
+-connaitre le contenu du mot d’adresse (0000)b : ADR = 0000, CMD = 0 , Chip Select = 1 et un cycle d'horloge
+on trouvera le resultat dans la sortire sur 8bits DATA_out ( meme chose pour (0001)b on change ADR a 0001 )
+-pour stocker la valeur (10)h dans le mot d’adresse (0001)b :
+ADR = 0001 , DATA_in = 00010000 ,CMD = 1, Chip Select = 1 , + cycle d'horloge
+-pour stocker la valeur 3 dans le mot 5 :
+ADR = 0101 , DATA_in = 00000011 ,CMD = 1, Chip Select = 1 , + cycle d'horloge
+-pour placer sur le bus de données le mot stocké en mémoire à l’adresse 5 :
+ADR = 0101 ,CMD = 0, Chip Select = 1 , + cycle d'horloge
+
+3.
+8 mots = 2^3 ====> BUS D'ADRESS sur 3 bits 
+la taille d'un mots = 4octets(32bits) ===> BUS DATA sur 32bits 
+

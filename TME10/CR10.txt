@@ -1,0 +1,315 @@
+﻿=======================================  TME8  =============================================
+############################## BOUSBA Abdellah 3804891 #####################################
+============================================================================================
+
+ ===============
+|| Exercice 1: ||
+ ===============
+
+
+Question 1 :
+
+
+.data 
+ch:	.asciiz "machainech"
+.text
+
+lui $3, 0x1001
+ori $4,$3,0		#printf ch
+ori $2,$0,4
+syscall
+
+
+ori $2,$0,11
+ori $4,$0, 0x0A  #affichage \n
+syscall
+
+ori $4,$3,0
+
+while:
+lb $5,0($3)
+beq $5,$0, endwhile		#saut si ch[i] = 0
+addi $5,$5,-0x20		# ch[i] - 0x20
+sb $5,0($3) 			# ch[i] = ch[i] - 0x20
+addi $3,$3,1		#i++
+j while
+endwhile:
+
+ori $2,$0,4 #printf ch
+syscall
+
+ori $2,$0,10		# return 0
+syscall
+
+
+
+
+
+
+
+
+
+
+Question2:
+
+
+.data 
+ch1:	.asciiz "machaineprems"
+ch2:	.asciiz "deuxiemechaine"
+
+.text
+
+lui $3, 0x1001			#$3 = @ch1
+
+addiu $29,$29,-4		#allouer memoire
+sw $3,0($29)			#empiler
+jal f					#appel a f
+addiu $29,$29,4		#depiler
+ori $4,$3,0
+ori $2,$0,4 #printf ch
+syscall
+
+
+
+ori $2,$0,11
+ori $4,$0, 0x0A  #affichage \n
+syscall
+
+addi $3,$3,14		# $3 = @ ch2
+addiu $29,$29,-4		#allouer memoire
+sw $3,0($29)			#empiler
+jal f					#appel a f
+addiu $29,$29,4		#depiler
+
+ori $4,$3,0
+ori $2,$0,4 #printf ch
+syscall
+
+ori $2,$0,10		# return 0
+syscall
+
+
+
+
+f:
+addiu $29,$29,-12		#allouer memoire
+sw $31,8($29)			#empiler
+sw $3,4($29)
+sw $5,0($29)
+
+lw $6,12($29)		#recuperer la chaine de caractere 
+
+while:
+lb $5,0($6)
+beq $5,$0, endwhile		#saut si ch[i] = 0
+addi $5,$5,-0x20		# ch[i] - 0x20
+sb $5,0($6) 			# ch[i] = ch[i] - 0x20
+addi $6,$6,1		#i++
+j while
+endwhile:
+
+lw $31,8($29)			#depiler et restore contexte
+lw $3,4($29)
+lw $5,0($29)
+
+jr $31			#retour a l adresse suivant de l appel
+
+
+
+
+
+
+
+Question 3 :
+
+
+.data 
+ch1:	.asciiz "Une chaine_exemple"
+ch2:	.asciiz "1 autre Test"
+a: .byte 'a'
+z: .byte 'z'
+
+.text
+
+lui $3, 0x1001			#$3 = @ch1
+
+addiu $29,$29,-4		#allouer memoire
+sw $3,0($29)			#empiler
+jal f					#appel a f
+addiu $29,$29,4		#depiler
+ori $4,$3,0
+ori $2,$0,4 #printf ch
+syscall
+
+
+
+ori $2,$0,11
+ori $4,$0, 0x0A  #affichage \n
+syscall
+
+addi $3,$3,19			# $3 = @ ch2
+addiu $29,$29,-4		#allouer memoire
+sw $3,0($29)			#empiler
+jal f					#appel a f
+addiu $29,$29,4		#depiler
+
+ori $4,$3,0
+ori $2,$0,4 		#printf ch
+syscall
+
+ori $2,$0,10		# return 0
+syscall
+
+
+
+
+f:
+addiu $29,$29,-20		#allouer memoire
+sw $31,16($29)			#empiler
+sw $3,12($29)
+sw $5,8($29)
+sw $6,4($29)
+sw $7,0($29)
+
+
+xor $7,$7,$7		# i=0
+
+lw $6,20($29)		#recuperer la chaine de caractere 
+
+while:
+lb $5,0($6)
+beq $5,$0, endwhile		#saut si ch[i] = 0
+
+
+addiu $29,$29,-4		#allouer memoire
+sw $5,0($29)			#empiler
+jal min_to_maj			#appel a min_to_maj:
+addiu $29,$29,4		#depiler
+
+
+sb $2,0($6) 			# ch[i] = val de retour
+
+
+addi $6,$6,1		#i++
+j while
+endwhile:
+
+	
+lw $31,16($29)			#depiler et restore contexte
+lw $3,12($29)
+lw $5,8($29)
+lw $6,4($29)
+lw $7,0($29)
+addiu $29,$29,20
+jr $31			#retour a l adresse suivant de l appel
+
+
+
+min_to_maj:
+
+addiu $29,$29,-24		#allouer memoire
+sw $31,20($29)			#empiler
+sw $3,16($29)
+sw $4,12($29)
+sw $5,8($29)
+sw $6,4($29)
+sw $7,0($29)
+
+
+lb $6,24($29)			#recuperer le char
+
+lui $3,0x1001
+lb $4,32($3)		# a
+lb $5,33($3)		# z
+
+slt $7,$6,$4	#c<a
+bne $7,$0, else
+slt $7,$5,$6	#z<c
+bne $7,$0, else
+addi $2,$6,-0x20		# return c- 0x20
+j end
+else:
+ori $2,$6,0			# return c
+end:
+
+lw $31,20($29)			#depiler et restore contexte
+lw $3,16($29)
+lw $4,12($29)
+lw $5,8($29)
+lw $6,4($29)		
+lw $7,0($29)
+addiu $29,$29,24
+jr $31			#retour a l adresse suivant de l appel
+
+
+
+============================================================================================
+
+ ===============
+|| Exercice 2: ||
+ ===============
+
+
+.data
+n : .word 2
+p : .word 4
+
+.text
+
+
+lui $3,0x1001
+lw $4,0($3)		# n
+lw $5,4($3)		# p
+ori $6,$0,6		#6
+
+addiu $29,$29,-12		#allouer memoire
+sw $4,0($29)			#empiler
+sw $5,4($29)			#empiler
+sw $6,8($29)			#empiler
+jal moyenne			#appel a moyenne
+addiu $29,$29,12		#depiler
+
+ori $4,$2,0		# affichage
+ori $2,$0,1
+syscall
+	
+ori $2,$0,10		#exit
+syscall
+
+
+
+
+moyenne:
+
+addiu $29,$29,-20		#allouer memoire
+sw $31,16($29)			#empiler
+sw $3,12($29)
+sw $4,8($29)
+sw $5,4($29)
+sw $6,0($29)
+
+
+lw $4,20($29)			#recuperer les parametres
+lw $5,24($29)
+lw $6,28($29)
+
+ori $3,$0,3		#$3 = 3
+add $2,$4,$5 		# a+b
+add $2,$2,$6		#   a+b +c
+	
+div $2,$3			
+mflo $2			#return   a+b+c / 3
+
+
+lw $31,16($29)		#depiler et restoration contexte
+lw $3,12($29)
+lw $4,8($29)
+lw $5,4($29)
+lw $6,0($29)
+addiu $29,$29,20
+
+
+jr $31
+
+
+

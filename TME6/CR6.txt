@@ -1,0 +1,171 @@
+﻿=======================================  TME5  =============================================
+############################## BOUSBA Abdellah 3804891 #####################################
+============================================================================================
+
+ ==============
+|| Exercice1: ||
+ ==============
+
+1.On les trouve dans l'onglet Help/Help 
+
+
+2.la saise de l'instruction ne modifie rien, meme le sauvgarde parcontre l'assemblage remplie le derectif
+.text par l'instruction et son codage en hexa. et on lit assemblage reussit ( l'instruction se trouve a 
+l'adresse 0x00400000 
+ 
+
+3.  addi $12, $18, 33 = 001000 10010 01100 0000 0000 0010 0001
+
+en changent le 29eme bit : 000000 10010 01100 0000 0000 0010 0001 apres decodage : addu $0, $18, $12
+
+ps : cette instruction ne change fait rien car le registre $0 vaut tjr 0
+
+4. addu $0, $18, 12 genere une erreur (Mars Message)
+
+
+
+
+============================================================================================
+
+ ==============
+|| Exercice2: ||
+ ==============
+
+1. 
+-pour afficher 137 :
+
+ori $16,$0, 137
+or $4, $0, $16
+ori $2,$0,1
+syscall
+
+ori $2, $0, 10
+syscall
+
+-F3 pour compiler , F5 pour executer , F7 pour executer pas a pas , F12 pour recommencer , F8 pour revenier
+en arriere 
+
+-si on change manuellement la valeur du registre et on relance depuis l instruction precedente, la valeur
+change a l'initiale donc on peut pas changer les valeur des registre directement
+
+
+2. pour affecter 65537 = 0x00010001 qui est sur 32 bits or la taille d'immediat est 16 bits alors on fait 
+passer les bits du poids fort apres les bits du pois faible :
+
+
+lui $16, 1
+addi $16,$16,1
+
+or $4, $0, $16
+ori $2,$0,1
+syscall
+
+ori $2, $0, 10
+syscall
+
+============================================================================================
+
+ ==============
+|| Exercice3: ||
+ ==============
+
+ori $9,$0, 84
+ori $10,$0, 10
+
+div $9,$10 #resultat dans lo , reste hi
+mflo $11
+mfhi $12
+
+ori $4, $11, 0 #affichage resultat
+ori $2, $0, 1
+syscall
+
+ori $4, $12, 0 #affichage reste
+ori $2, $0, 1
+syscall
+
+ori $2, $0, 10
+syscall
+
+- on a 84 = 8*10+4 alors pour reconstruire 84 on doit faire 8*10 et additioner le reste 4
+
+
+ori $9,$0, 84
+ori $10,$0, 10
+
+div $9,$10 #resultat dans lo , reste hi
+mflo $11
+mfhi $12
+
+
+mult $11,$10       # 10 est dans $10
+mflo $13            #on est le resultat dans $13
+add $13,$13,$12     # on ajoute le reste de div (4)
+
+ori $4, $13, 0 #affichage resultat multip
+ori $2, $0, 1
+syscall
+
+ori $2, $0, 10
+syscall
+
+
+
+- pour recuperer les valeur de lecture on utilise l'appel system 5 et on trouve la valeur dans $2 alors
+on modifie $9 et $10 tel que :
+
+
+ori $2, $0, 5
+syscall
+or $9,$0,$2
+
+ori $2, $0, 5
+syscall
+or $10,$0,$2
+
+
+
+============================================================================================
+
+ ==============
+|| Exercice4: ||
+ ==============
+
+
+#operations logiques
+ori $3, $0, 0x00FF   #$3 = 0x00FF 
+ori $4, $0, 0xFFF0   #$4 = 0xFFF0
+and $5, $4, $3       #$5 = 0xF0 
+xor $6, $4, $3       #$6 = 0xFF0F 
+xor $6, $6, $6       #$6 = 0
+# decalages
+ori $4, $0, 25
+sll $5, $4, 1        # $5 = 0x32
+sll $6, $4, 2        # $6 = 0x64
+sll $7, $4, 3        # $7 = 0xC8
+srl $5, $4, 1        # $5 = 0x0C
+srl $5, $4, 2        # $5 = 0x06
+srl $5, $4, 3        # $5 = 0x03
+addi $4, $0, -25
+srl  $5, $4, 1       # $5 = 0x7FFFFFE3
+srl  $6, $4, 2       # $6 = 0x3FFFFFF9
+sra  $15, $4, 1      # $15 = 0xFFFFFFF3
+sra  $16, $4, 2      # $16 = 0xFFFFFFF9
+sra  $17, $4, 3      # $17 = 0xFFFFFFFC
+#comparaisons
+ori $4, $0, 2
+ori $3, $0, 4
+slt $6, $3, $4       # $6 = 0
+slt $7, $4, $3       # $7 = 1
+ori $2, $0, 10
+syscall
+
+pour afficher les valeur en decimal on decoche la case (Settings/Values Displayed in Hexa)
+
+on remarque que :   sll x,y,z  <=====> x = y* 2^z
+					srl x,y,z  <=====> x = y/ 2^z
+pour les entiers negatifs : on doit utiliser sra et non pas srl :
+
+					sra x,y,z <======> x = y/ 2^z -1
+					
+pour la comparaison : slt x,y,z <======> x = 1 si y<z , x = 0 si y>=z

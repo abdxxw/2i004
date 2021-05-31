@@ -1,0 +1,111 @@
+=======================================  TME1  =============================================
+############################## BOUSBA Abdellah 3804891 #####################################
+============================================================================================
+
+ ==============
+|| Exercice1: ||
+ ==============
+
+1.sachant que la FND s , cout (D'après le TD) sont : s = (NON a.NON b.c)+(NON a.b.NON c)+(a.NON b.NON c)+(a.b.c)
+				  cout = (NON a.b.c)+(a.NON b.c)+(a.b.NON c)+(a.b.c)
+
+on utilise 3 entrées a,b et cin
+	   2 sorties s et cout
+	   7 portes AND (on remarque de a.b.c s'apparait dans les 2 formule)
+	   2 portes OR
+	   3 portes NON
+et on fait le branchement pour correspondre au FND au dessus.
+La taille du circuit est 12.
+Le chemin le plus longs est de a vers s en passant par 3 portes NOT,OR,AND.
+
+on teste son fonctionement et on obtient la TV correcte :
+cin	a	b	s	cout
+0	0	0	0	0
+0	0	1	1	0
+0	1	0	1	0
+0	1	1	0	1
+1	0	0	1	0
+1	0	1	0	1
+1	1	0	0	1
+1	1	1	1	1
+
+
+2.D'après le TD on a : s = a XOR b XOR cin
+		    cout = b.cin + a.(b XOR cin)
+
+on utilise 2 portes XOR , 2 AND et une OR.
+le plus long chemin est de b vers cout e passant par 3 portes XOR,AND,OR.
+la taille du circuit est 5.
+pour tester son fonctionnement on passe a la simulation et on obtient la TV correcte.
+
+
+remarque : il faut changer Multipale Input Behavor à When odd number are on pour le XOR.
+
+3.on branche a3b3 a2b2 a1b1 a0b0 a 4 Add_red dans cette ordre et en sortie respectivement s3 s2 s1 s0
+un cin rentre dans le premier Add_red, chaque retenue rentre dans le Add_red suivant sauf la derniere qu'on la branche
+a un Pin cout.
+
+
+4. en simmulant le circuit avec quelque addition 4bits on obtient les resultats suivantes :
+
+ 1011            0111		 1111
++0011		+0001		+0001
+______		_____		_____
+ 1110		 1000		10000 (depacement)
+
+pour le 3eme cas on a un depeacement et on obtient des 0 sur les sorties et 1 sur cout.
+
+
+5.le chemin les plus long est de b3 vers cout.
+ pour n bits : on a le plus long chemin d'un add 1 bits est 3 donc ca sera 3n.
+
+
+
+============================================================================================
+
+ ==============
+|| Exercice2: ||
+ ==============
+
+
+1. 
+0100 0110 - 0000 0100 = 0100 0010
+<==> 70 - 4 = 66
+0100 0110 - 0010 1100 = 0001 1010
+<==> 70 - 44 = 26
+0100 0110 - 0110 1100 = 1101 1010 avec retenue 1 (depacement)
+<==> 70 - 108 = 218
+
+l'intervalle des valeurs manipulable d'un soustracteur 4 bits est de 0-(2^4)-1.
+l’indicateur de dépassement a-b est si le bit du poids fort de a est < que le bit du poids fort de b
+
+2.TV du soustracteur 1bit:
+
+bin	a	b	d	bout
+0	0	0	0	0
+0	0	1	1	1
+0	1	0	1	0
+0	1	1	0	0
+1	0	0	1	1
+1	0	1	0	1
+1	1	0	0	0
+1	1	1	1	1
+
+et l'expression simplifier : d = a XOR b XOR bin
+			  bout = b.bin + NON a.(b XOR bin)
+
+3.
+4. meme principe que l'additionneur.
+
+
+
+============================================================================================
+
+ ==============
+|| Exercice3: ||
+ ==============
+
+1.pour faciliter le branchement on doit utiliser 3 splitters 5 bits et un mux 10vers5 avec un bit de selection.
+on branche correctement les entrées de A et B avec Additionneur et le Soustracteur
+
+2.pour assurer le fonctionnement de notre circuit on essaye d'effectuer les operations de TD. et on trouve les meme resultats.
